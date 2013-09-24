@@ -1,7 +1,7 @@
 {
     "name": "aura/includer",
     "type": "library",
-    "description": "Include multiple files from specified directories, in order, with variables injected into a limited include scope.",
+    "description": "Include multiple files from specified directories, in order, with variables extracted into a limited include scope.",
     "keywords": ["include", "limited", "scope"],
     "homepage": "http://auraphp.com/package/Aura.Includer",
     "license": "BSD-2-Clause",
