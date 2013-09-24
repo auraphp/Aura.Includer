@@ -92,7 +92,7 @@ Because of the shared variables being used in each file, we need them to be
 available, but we also want each file to be kept separate from the global
 scope.
 
-When including the configuration files, we needs *both* the default
+When including the configuration files, we need *both* the default
 *and* an additional "mode" for overrides to the defaults.
 
 If a file is missing, we can skip it without ill effect.
