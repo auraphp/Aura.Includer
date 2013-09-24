@@ -15,6 +15,8 @@ namespace Aura\Includer;
  * Includes multiple files from specified directories, in order, with
  * variables extracted into a limited include scope.
  * 
+ * @todo add a debug/log/tracker so we can see what didn't get loaded
+ * 
  * @package Aura.Includer
  * 
  */
