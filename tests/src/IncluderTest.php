@@ -112,6 +112,29 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         $this->includer->getPaths('bad-order');
     }
     
+    public function testNonStrict()
+    {
+        $this->includer->setStrict(false);
+        $this->assertFalse($this->includer->isStrict());
+        
+        $expect = array(
+            $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
+            $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file2.php',
+            $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file3.php',
+            $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file1.php',
+            $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file2.php',
+            $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file3.php',
+            $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file1.php',
+            $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file2.php',
+            $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file3.php',
+        );
+        $actual = $this->includer->getPaths(Includer::DIR_ORDER);
+        $this->assertSame($expect, $actual);
+    }
+    
     public function testLoad()
     {
         $this->includer->load();

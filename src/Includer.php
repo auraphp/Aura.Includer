@@ -17,9 +17,6 @@ namespace Aura\Includer;
  * 
  * @package Aura.Includer
  * 
- * @todo Add 'strict' check. Use realpath() under strict, is_readable()
- * under non-strict.
- * 
  */
 class Includer
 {
@@ -88,6 +85,16 @@ class Includer
     
     /**
      * 
+     * Operate in strict mode?  When strict, the combined directory and file
+     * path must be readable via realpath() and must be within the directory.
+     * 
+     * @var bool
+     * 
+     */
+    protected $strict = true;
+    
+    /**
+     * 
      * Constructor.
      * 
      */
@@ -99,6 +106,32 @@ class Includer
             unset($__VARS__);
             include $__FILE__;
         };
+    }
+    
+    /**
+     * 
+     * Sets strict mode.
+     * 
+     * @param bool $strict Whether or not to operate in strict mode.
+     * 
+     * @return null
+     * 
+     */
+    public function setStrict($strict)
+    {
+        $this->strict = (bool) $strict;
+    }
+    
+    /**
+     * 
+     * Is the includer in strict mode?
+     * 
+     * @return bool True for strict mode, false for not.
+     * 
+     */
+    public function isStrict()
+    {
+        return $this->strict;
     }
     
     /**
@@ -316,7 +349,7 @@ class Includer
         $paths = array();
         foreach ($this->dirs as $dir) {
             foreach ($this->files as $file) {
-                $this->addRealPath($paths, $dir, $file);
+                $this->addPath($paths, $dir, $file);
             }
         }
         return $paths;
@@ -334,7 +367,7 @@ class Includer
         $paths = array();
         foreach ($this->files as $file) {
             foreach ($this->dirs as $dir) {
-                $this->addRealPath($paths, $dir, $file);
+                $this->addPath($paths, $dir, $file);
             }
         }
         return $paths;
@@ -354,10 +387,23 @@ class Includer
      * @return null
      * 
      */
-    protected function addRealPath(&$paths, $dir, $file)
+    protected function addPath(&$paths, $dir, $file)
     {
+        // get the basic path
+        $path = $dir . $file;
+        
+        // strict?
+        if (! $this->strict) {
+            // not in strict mode; don't check realpath() or presence in the
+            // specified directory.
+            if (is_readable($path)) {
+                $paths[] = $path;
+            }
+            return;
+        }
+        
         // does the real path exist, and do we have read access to it?
-        $path = realpath($dir . $file);
+        $path = realpath($path);
         if (! $path) {
             // no, don't retain it
             return;
