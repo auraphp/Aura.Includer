@@ -263,7 +263,7 @@ $text = '<?php /** '
       . ' */' . PHP_EOL . PHP_EOL
       . $text;
 
-file_put_contents('/path/to/cache_file.php');
+file_put_contents('/path/to/cache_file.php', $text);
 ?>
 ```
 
