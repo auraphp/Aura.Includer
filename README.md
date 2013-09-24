@@ -181,8 +181,8 @@ for `Includer::DIR_ORDER` would be:
     modules/foo/routes.php
     # second dir
     modules/bar/autoload.php
-    modules/baz/autoload.php
     # third dir
+    modules/baz/autoload.php
     modules/baz/config/default.php
     
 Alternatively, you can specify `load(Includer::FILE_ORDER)` to load files in
