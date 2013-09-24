@@ -212,10 +212,9 @@ _Includer_. (This is because it's possible to use `../` and symbolic links to
 point to file locations outside the specified directory.)  Files that are not
 readable, or that are outside the specified directory, will not be included.
 
-This strict way of processing is sometimes too strict; if you use symbolic
-links, for example, the strict processing may exclude those files. To turn off
-strict process, and only check if the file is readable, call
-`setStrict(false)`.
+This type of processing is sometimes too strict; if you use symbolic links,
+for example, the strict processing may exclude those files. To turn off strict
+process, and only check if the file is readable, call `setStrict(false)`.
 
 ```php
 <?php
