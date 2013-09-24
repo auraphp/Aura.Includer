@@ -166,7 +166,6 @@ variables into that limited scope, and then include the file within that limited
 scope. This means that no include file can affect the global state of the
 application, except through the injected variables.
 
-
 ### Include Order
 
 By default, the _Includer_ will include files in "directory order", represented
@@ -203,17 +202,43 @@ above example, the loading for `Includer::FILE_ORDER` would be:
     # fourth file
     modules/foo/routes.php
 
-### File Concatenation
+### Strict Processing
 
-If you have dozens or scores of files that need to be included, that can be a
-performance draing. The _Includer_ has a `read()` method to get the contents
-of the files to be included and concatenate them, returning the concatenated
-contents for you to cache in a file of your choosing. You can then point the
-_Includer_ to that cached file; if it exists, the _Includer_ will use that
-file instead of including the various different directory and file path
-combinations.
+By default, the _Includer_ is relatively strict about what path combinations
+it will actually include. It will convert the directory + file path using
+[realpath()](http://php.net/realpath) to get the absolute path, and then check
+to see if that absolute path is in the same directory as specified in the
+_Includer_. (This is because it's possible to use `../` and symbolic links to
+point to file locations outside the specified directory.)  Files that are not
+readable, or that are outside the specified directory, will not be included.
+
+This strict way of processing is sometimes too strict; if you use symbolic
+links, for example, the strict processing may exclude those files. To turn off
+strict process, and only check if the file is readable, call
+`setStrict(false)`.
+
+```php
+<?php
+// turn off strict processing
+$includer->setStrict(false);
+?>
+```
+
+### Cache File
+
+If you have dozens or scores of files that need to be included, that amount of
+file system activity can be a performance drain. To mitigate this, it can be
+useful to cache the files that would have been included.
+
+The _Includer_ has a `read()` method to get the contents of the files to be
+included and concatenate them, returning the concatenated contents for you to
+cache in a file of your choosing. You can then point the _Includer_ to that
+cached file; if it exists, the _Includer_ will use that file instead of
+including the various different directory and file path combinations.
 
 First, we get the text of the concatenated files using the `read()` method.
+By default, it will concatenate the files in `Includer::DIR_ORDER`, but you
+can specify `Includer::FILE_ORDER` if you prefer.
 
 ```php
 <?php
@@ -221,10 +246,9 @@ $text = $includer->read();
 ?>
 ```
 
-> N.b.: The `read()` method will get the contents of the file, then strip
-> any leading and trailing `<?php ?>` tags, replace the `__FILE__` constant
-> with a string file name, and replace the `__DIR__` constant with a string
-> directory name.
+The `read()` method will get the contents of each file, then strip any leading
+and trailing `<?php ?>` tags, replace the `__FILE__` constant with a string
+file name, and replace the `__DIR__` constant with a string directory name.
 
 Now that we have the contents of the files, we add an opening `<?php` tag and
 the time we created it, and then save it as a cache file:
@@ -233,19 +257,20 @@ the time we created it, and then save it as a cache file:
 <?php
 $text = '<?php /** '
       . date('Y-m-d H:i:s')
-      . ' */' . PHP_EOL
+      . ' */' . PHP_EOL . PHP_EOL
       . $text;
 
 file_put_contents('/path/to/cache_file.php');
 ?>
 ```
 
-Finally, we tell the _Includer_ where the cache file is; when present, the
-_Includer_ will use it on `load()`:
+Finally, we tell the _Includer_ where the cache file is. If it is readable,
+the _Includer_ will use it on `load()`; otherwise, it will include the various
+directory and file combinations.
 
 ```php
 <?php
 $includer->setCacheFile('/path/to/cache_file.php');
-$includer->load(); // uses the cache file
+$includer->load(); // uses the cache file if it exists
 ?>
 ```
