@@ -238,7 +238,7 @@ including the various different directory and file path combinations.
 
 First, we get the text of the concatenated files using the `read()` method.
 By default, it will concatenate the files in `Includer::DIR_ORDER`, but you
-can specify `Includer::FILE_ORDER` if you prefer.
+can specify `read(Includer::FILE_ORDER)` if you prefer.
 
 ```php
 <?php
@@ -246,9 +246,12 @@ $text = $includer->read();
 ?>
 ```
 
-The `read()` method will get the contents of each file, then strip any leading
-and trailing `<?php ?>` tags, replace the `__FILE__` constant with a string
-file name, and replace the `__DIR__` constant with a string directory name.
+The `read()` method will get the contents of each file, trim it, strip any
+leading and trailing `<?php ?>` tags, replace the `__FILE__` constant with the
+equivalent string file name, and replace the `__DIR__` constant with the
+equivalent string directory name. (These replacements reflect the fact that
+the code is being copied from its original location to a new location, and
+the constants expect the value of thr original location.)
 
 Now that we have the contents of the files, we add an opening `<?php` tag and
 the time we created it, and then save it as a cache file:
