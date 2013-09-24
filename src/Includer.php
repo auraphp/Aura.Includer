@@ -1,23 +1,96 @@
 <?php
+/**
+ * 
+ * This file is part of Aura for PHP.
+ * 
+ * @package Aura.Includer
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ */
 namespace Aura\Includer;
 
+/**
+ * 
+ * Includes multiple files from specified directories, in order, with
+ * variables extracted into a limited include scope.
+ * 
+ * @package Aura.Includer
+ * 
+ * @todo Add 'strict' check. Use realpath() under strict, is_readable()
+ * under non-strict.
+ * 
+ */
 class Includer
 {
+    /**
+     * 
+     * Process paths directory-first.
+     * 
+     * @const string
+     * 
+     */
     const DIR_ORDER = 'dir_order';
     
+    /**
+     * 
+     * Process paths file-first.
+     * 
+     * @const string
+     * 
+     */
     const FILE_ORDER = 'file_order';
     
+    /**
+     * 
+     * The location of the cached include file, if any.
+     * 
+     * @var string
+     * 
+     */
     protected $cache_file;
     
+    /**
+     * 
+     * The directories to traverse for files.
+     * 
+     * @var array
+     * 
+     */
     protected $dirs = array();
     
+    /**
+     * 
+     * The files to look for in the directories.
+     * 
+     * @var array
+     * 
+     */
     protected $files = array();
     
-    // a closure for a scope-limited include
+    /**
+     * 
+     * A closure to include files in a limited scope.
+     * 
+     * @var Closure
+     * 
+     */
     protected $limited_include;
     
+    /**
+     * 
+     * Variables to extract within the limited include.
+     * 
+     * @var array
+     * 
+     */
     protected $vars = array();
     
+    /**
+     * 
+     * Constructor.
+     * 
+     */
     public function __construct()
     {
         $this->limited_include = function ($__FILE__, array $__VARS__) {
@@ -28,12 +101,32 @@ class Includer
         };
     }
     
+    /**
+     * 
+     * Sets the directories to traverse through; clears all previous
+     * directories.
+     * 
+     * @param array $dirs The directories to traverse through.
+     * 
+     * @return null
+     * 
+     */
     public function setDirs(array $dirs)
     {
         $this->dirs = array();
         $this->addDirs($dirs);
     }
     
+    /**
+     * 
+     * Adds directories to traverse through; appends to the existing
+     * directories.
+     * 
+     * @param array $dirs The directories to traverse through.
+     * 
+     * @return null
+     * 
+     */
     public function addDirs(array $dirs)
     {
         foreach ($dirs as $dir) {
@@ -41,6 +134,15 @@ class Includer
         }
     }
     
+    /**
+     * 
+     * Adds one directory to traverse through.
+     * 
+     * @param string $dir The directory to traverse through.
+     * 
+     * @return null
+     * 
+     */
     public function addDir($dir)
     {
         $dir = str_replace('/', DIRECTORY_SEPARATOR, $dir);
@@ -48,17 +150,44 @@ class Includer
         $this->dirs[] = $dir;
     }
     
+    /**
+     * 
+     * Returns the directories to be traversed through.
+     * 
+     * @return array The directories to be traversed through.
+     * 
+     */
     public function getDirs()
     {
         return $this->dirs;
     }
     
+    /**
+     * 
+     * Sets the files to look for in the directories; clears all previous
+     * files.
+     * 
+     * @param array $files The files to look for.
+     * 
+     * @return null
+     * 
+     */
     public function setFiles(array $files)
     {
         $this->files = array();
         $this->addFiles($files);
     }
     
+    /**
+     * 
+     * Adds files to to look for in the directories; appends to the existing
+     * files.
+     * 
+     * @param array $files The files to look for.
+     * 
+     * @return null
+     * 
+     */
     public function addFiles(array $files)
     {
         foreach ($files as $file) {
@@ -66,37 +195,102 @@ class Includer
         }
     }
     
+    /**
+     * 
+     * Adds one file to look for in the directories.
+     * 
+     * @param string $file The file to look for.
+     * 
+     * @return null
+     * 
+     */
     public function addFile($file)
     {
         $file = str_replace('/', DIRECTORY_SEPARATOR, $file);
         $this->files[] = $file;
     }
     
+    /**
+     * 
+     * Returns the files to look for in the directories.
+     * 
+     * @return array The files to look for in the directories.
+     * 
+     */
     public function getFiles()
     {
         return $this->files;
     }
     
+    /**
+     * 
+     * Sets the path to the cache file, if any.
+     * 
+     * @param string $cache_file The path to the cache file.
+     * 
+     * @return null
+     * 
+     */
     public function setCacheFile($cache_file)
     {
         $this->cache_file = $cache_file;
     }
     
+    /**
+     * 
+     * Returns the path to the cache file.
+     * 
+     * @return string The path to the cache file.
+     * 
+     */
     public function getCacheFile()
     {
         return $this->cache_file;
     }
     
+    /**
+     * 
+     * Sets the variables to extract inside the limited include scope.
+     * 
+     * @param array $vars The variables to extract inside the limited include
+     * scope.
+     * 
+     * @return null
+     * 
+     * @see extract()
+     * 
+     */
     public function setVars(array $vars)
     {
         $this->vars = $vars;
     }
     
+    /**
+     * 
+     * Returns the variables to extract inside the limited include scope.
+     * 
+     * @return array The variables to extract inside the limited include
+     * scope.
+     * 
+     */
     public function getVars()
     {
         return $this->vars;
     }
     
+    /**
+     * 
+     * Gets the list of paths to look for, combined from the directories and
+     * files; returns only paths that exist and are readable.
+     * 
+     * @param string $order Combine the paths in this order; self::DIR_ORDER
+     * to look for all files in each directory first, or self::FILE_ORDER to
+     * look through all directories for each file first.
+     * 
+     * @return array The readable paths combined from the directories and
+     * files.
+     * 
+     */
     public function getPaths($order = self::DIR_ORDER)
     {
         if ($order == self::DIR_ORDER) {
@@ -110,6 +304,13 @@ class Includer
         throw new Exception\NoSuchOrder;
     }
     
+    /**
+     * 
+     * Returns the paths in directory-first order.
+     * 
+     * @return array
+     * 
+     */
     protected function getPathsByDirOrder()
     {
         $paths = array();
@@ -121,6 +322,13 @@ class Includer
         return $paths;
     }
     
+    /**
+     * 
+     * Returns the paths in file-first order.
+     * 
+     * @return array
+     * 
+     */
     protected function getPathsByFileOrder()
     {
         $paths = array();
@@ -132,9 +340,23 @@ class Includer
         return $paths;
     }
     
+    /**
+     * 
+     * Adds the real path for a directory and file to the paths, but only if
+     * the real path is readable and exists in the directory.
+     * 
+     * @param array $paths A reference to the paths array.
+     * 
+     * @param string $dir The directory look for the file in.
+     * 
+     * @param string $file The file to look for.
+     * 
+     * @return null
+     * 
+     */
     protected function addRealPath(&$paths, $dir, $file)
     {
-        // do we have read access to the real path to the file?
+        // does the real path exist, and do we have read access to it?
         $path = realpath($dir . $file);
         if (! $path) {
             // no, don't retain it
@@ -153,7 +375,17 @@ class Includer
         $paths[] = $path;
     }
     
-    // includes the files
+    /**
+     * 
+     * Include the paths combined from the directories and files.
+     * 
+     * @param string $order Combine the paths in this order; self::DIR_ORDER
+     * to look for all files in each directory first, or self::FILE_ORDER to
+     * look through all directories for each file first.
+     * 
+     * @return null
+     * 
+     */
     public function load($order = self::DIR_ORDER)
     {
         $limited_include = $this->limited_include;
@@ -169,7 +401,21 @@ class Includer
         }
     }
     
-    // reads and concatenates all file contents, stripping PHP tags.
+    /**
+     * 
+     * Concatenate the contents of the paths combined from the directories and
+     * files; strip opening and closing PHP tags, replace __FILE__ with the
+     * appropriate file name string, and __DIR__ with the appropriate
+     * directory name string, and add comments indicate the original path
+     * locations.
+     * 
+     * @param string $order Combine the paths in this order; self::DIR_ORDER
+     * to look for all files in each directory first, or self::FILE_ORDER to
+     * look through all directories for each file first.
+     * 
+     * @return string The contents of the concatenated paths.
+     * 
+     */
     public function read($order = self::DIR_ORDER)
     {
         $text = '';
@@ -180,6 +426,15 @@ class Includer
         return $text;
     }
     
+    /**
+     * 
+     * Gets the contents of a file path and modifies it for concatenation.
+     * 
+     * @param string $path The file to get the contents of.
+     * 
+     * @return string The contents modified for concatenation.
+     * 
+     */
     protected function readFileContents($path)
     {
         // get the file contents
