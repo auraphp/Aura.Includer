@@ -126,7 +126,7 @@ both the default config and an override testing config):
 
 ```php
 <?php
-$includer->setDirs(array(
+$includer->setFiles(array(
     'autoload.php',
     'config/default.php',
     'config/testing.php',
