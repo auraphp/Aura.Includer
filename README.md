@@ -1,38 +1,40 @@
 # Aura.Includer
 
-Include multiple files from specified directories, in order, with variables
-extracted into a limited include scope.
+Provides a facility to include multiple files from specified directories, in
+order, with variables extracted into a limited include scope.
 
-## Preliminaries
+## Foreword
 
 ### Installation and Autoloading
 
-This library is installable via Composer and is registered on Packagist at
-<https://packagist.org/packages/aura/includer>. Installing via Composer will
-set up autoloading automatically.
+This library is installable and autoloadable via Composer with the following
+`require` element in your `composer.json` file:
 
+    "require": {
+        "aura/includer": "dev-develop-2"
+    }
+    
 Alternatively, download or clone this repository, then require or include its
 _autoload.php_ file.
 
 ### Dependencies and PHP Version
 
-As with all Aura libraries, this library has no external dependencies. It
+As with all Aura libraries, this library has no userland dependencies. It
 requires PHP version 5.3 or later.
 
 ### Tests
 
 [![Build Status](https://travis-ci.org/auraphp/Aura.Includer.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Includer)
 
-This library has 100% code coverage. To run the library tests, first install
-[PHPUnit][], then go to the library _tests_ directory and issue `phpunit` at
-the command line.
+This library has 100% code coverage with [PHPUnit][]. To run the tests at the
+command line, go to the _tests_ directory and issue `phpunit`.
 
-[PHPUnit]: http://phpunit.de/manual/
+[phpunit]: http://phpunit.de/manual/
 
 ### PSR Compliance
 
-This library attempts to comply to [PSR-1][], [PSR-2][], and [PSR-4][]. If you
-notice compliance oversights, please send a patch via pull request.
+This library attempts to comply with [PSR-1][], [PSR-2][], and [PSR-4][]. If
+you notice compliance oversights, please send a patch via pull request.
 
 [PSR-1]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
@@ -44,9 +46,10 @@ notice compliance oversights, please send a patch via pull request.
 ### The Example Scenario
 
 Let's say you have a series of packages, modules, plugins, etc. To do its
-setup work, your framework or foundation needs to include certain files, such
-as configuration or routing files.  For our examples, the directory structure
-will look like this:
+setup work, your framework or foundation needs to include certain files from
+each of thse modules, such as configuration or routing files.
+
+For our examples, the module directory structure will look like this:
 
     modules/
         foo/
@@ -104,7 +107,9 @@ First, we instantiate the _Includer_:
 
 ```php
 <?php
-$includer = new \Aura\Includer\Includer;
+use Aura\Includer\Includer;
+
+$includer = new Includer;
 ?>
 ```
 
