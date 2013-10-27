@@ -280,3 +280,9 @@ $includer->setCacheFile('/path/to/cache_file.php');
 $includer->load(); // uses the cache file if it exists
 ?>
 ```
+
+### Debugging
+
+Sometimes it will be useful to see what files the _Includer_ actually found.
+Use the `getDebug()` method to return an array of information about what
+the _Includer_ found, in what order, and in what mode.
