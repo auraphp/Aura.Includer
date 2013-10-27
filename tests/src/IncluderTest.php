@@ -108,6 +108,33 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         $actual = $this->includer->getPaths(Includer::FILE_ORDER);
         $this->assertSame($expect, $actual);
         
+        $expect = array(
+            'Order: file_order',
+            'Strict: true',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file3.php',
+        );
+        $actual = $this->includer->getDebug();
+        $this->assertSame($expect, $actual);
+        
         $this->setExpectedException('Aura\Includer\Exception\NoSuchOrder');
         $this->includer->getPaths('bad-order');
     }
@@ -133,6 +160,33 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->includer->getPaths(Includer::DIR_ORDER);
         $this->assertSame($expect, $actual);
+        
+        $expect = array(
+            'Order: dir_order',
+            'Strict: false',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Not found: ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Not found: ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found: ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found: ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            'Not found: ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file3.php',
+        );
+        $actual = $this->includer->getDebug();
+        $this->assertSame($expect, $actual);
     }
     
     public function testLoad()
@@ -151,6 +205,42 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->track->files;
         $this->assertSame($expect, $actual);
+        
+        $expect = array(
+            'Order: dir_order',
+            'Strict: true',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Load: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Load: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Load: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Load: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Load: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Load: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Load: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Load: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Load: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file3.php',
+        );
+        $actual = $this->includer->getDebug();
+        $this->assertSame($expect, $actual);
     }
 
     public function testLoad_cacheFile()
@@ -159,6 +249,12 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         $this->includer->load();
         $expect = array('cache file');
         $actual = $this->track->files;
+        $this->assertSame($expect, $actual);
+        
+        $expect = array(
+            'Load: ' . $this->fakefs . 'cache_file.php',
+        );
+        $actual = $this->includer->getDebug();
         $this->assertSame($expect, $actual);
     }
     
@@ -216,6 +312,42 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
 
 EXPECT;
         $expect = str_replace('/', DIRECTORY_SEPARATOR, $expect);
+        $this->assertSame($expect, $actual);
+        
+        $expect = array(
+            'Order: dir_order',
+            'Strict: true',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'cache_file.php',
+            'Not found (realpath): ' . $this->fakefs . 'dirX' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Not found (realpath): ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'fileX.php',
+            'Not found (directory): ' . $this->fakefs . 'cache_file.php',
+            'Found: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Read: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Read: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Read: ' . $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Read: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Read: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Read: ' . $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file3.php',
+            'Read: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file1.php',
+            'Read: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file2.php',
+            'Read: ' . $this->fakefs . 'dir3' . DIRECTORY_SEPARATOR . 'file3.php',
+        );
+        $actual = $this->includer->getDebug();
         $this->assertSame($expect, $actual);
     }
 }
