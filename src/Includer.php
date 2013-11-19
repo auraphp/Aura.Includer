@@ -106,6 +106,15 @@ class Includer
     
     /**
      * 
+     * The found paths.
+     * 
+     * @var array
+     * 
+     */
+    protected $paths = array();
+    
+    /**
+     * 
      * Constructor.
      * 
      */
@@ -380,13 +389,13 @@ class Includer
      */
     protected function getPathsByDirOrder()
     {
-        $paths = array();
+        $this->paths = array();
         foreach ($this->dirs as $dir) {
             foreach ($this->files as $file) {
-                $this->addPath($paths, $dir, $file);
+                $this->addGlob($dir, $file);
             }
         }
-        return $paths;
+        return $this->paths;
     }
     
     /**
@@ -398,69 +407,56 @@ class Includer
      */
     protected function getPathsByFileOrder()
     {
-        $paths = array();
+        $this->paths = array();
         foreach ($this->files as $file) {
             foreach ($this->dirs as $dir) {
-                $this->addPath($paths, $dir, $file);
+                $this->addGlob($dir, $file);
             }
         }
-        return $paths;
+        return $this->paths;
     }
     
     /**
      * 
-     * Adds the real path for a directory and file to the paths, but only if
-     * the real path is readable and exists in the directory.
+     * Given a directory and a file spec, globs them for file paths, and adds
+     * them if they are found.
      * 
-     * @param array $paths A reference to the paths array.
+     * @param string $dir The directory to glob.
      * 
-     * @param string $dir The directory look for the file in.
-     * 
-     * @param string $file The file to look for.
+     * @param string $file The file to glob.
      * 
      * @return null
      * 
      */
-    protected function addPath(&$paths, $dir, $file)
+    protected function addGlob($dir, $file)
     {
-        // get the basic path
-        $path = $dir . $file;
-        
-        // strict?
-        if (! $this->strict) {
-            // not in strict mode; don't check realpath() or presence in the
-            // specified directory.
-            if (is_readable($path)) {
-                $paths[] = $path;
+        $glob = $dir . $file;
+        foreach (glob($glob) as $path) {
+            
+            // strict?
+            if (! $this->strict) {
+                $this->paths[] = $path;
                 $this->debug[] = "Found: $path";
-            } else {
-                $this->debug[] = "Not found: $path";
+                continue;
             }
-            return;
-        }
         
-        // does the real path exist, and do we have read access to it?
-        $real = realpath($path);
-        if (! $real) {
-            // no, don't retain it
-            $this->debug[] = "Not found (realpath): $path";
-            return;
-        } else {
-            $path = $real;
-        }
+            // convert the path to its real location so that directory checks
+            // work properly, even with directory traversal.
+            $path = realpath($path);
         
-        // is the file actually in the specified directory?
-        // this will fail with symlinks.
-        $dir_len = strlen($dir);
-        if (substr($path, 0, $dir_len) != $dir) {
-            // not actually in the directory, don't retain it
-            $this->debug[] = "Not found (directory): $path";
-            return;
-        }
+            // is the file actually in the specified directory?
+            // this will fail with symlinks.
+            $dir_len = strlen($dir);
+            if (substr($path, 0, $dir_len) != $dir) {
+                // not actually in the directory, don't retain it
+                $this->debug[] = "Not found (directory): $path";
+                continue;
+            }
         
-        // retain the real path
-        $paths[] = $path;
-        $this->debug[] = "Found: $path";
+            // retain the real path
+            $this->paths[] = $path;
+            $this->debug[] = "Found: $path";
+        }
     }
     
     /**

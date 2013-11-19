@@ -227,6 +227,21 @@ $includer->setStrict(false);
 ?>
 ```
 
+### Globbing
+
+Under the hood, the _Includer_ uses [glob()](http://php.net/glob) to find
+files. This means you can use wildcards in the filenames to include files.
+
+```php
+<?php
+// load all '.php' files in each of the directories
+$includer->addFiles(array(
+    'config/*.php',
+    'routes/*.php'
+);
+?>
+```
+
 ### Cache File
 
 If you have dozens or scores of files that need to be included, that amount of
