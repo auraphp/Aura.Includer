@@ -318,4 +318,31 @@ EXPECT;
         $actual = $this->includer->getDebug();
         $this->assertSame($expect, $actual);
     }
+    
+    public function testSetVar()
+    {
+        $expect = 'something';
+        $this->includer->setVar('track' , $expect);
+        $vars = $this->includer->getVars();
+        $this->assertSame($expect, $vars['track']);
+    }
+    
+    public function testAddVars()
+    {        
+        $this->includer->setVars(array(
+            'hello' => 'Hello',
+            'world' => 'World!'
+        ));
+        $this->includer->addVars(array(
+            'hello' => 'Replaced',
+            'seomthing' => 'Something else'
+        ));
+        $actual = $this->includer->getVars();
+        $expect = array(
+            'hello' => 'Replaced',
+            'world' => 'World!',
+            'seomthing' => 'Something else'
+        );
+        $this->assertSame($expect, $actual);
+    }
 }

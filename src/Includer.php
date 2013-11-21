@@ -321,6 +321,23 @@ class Includer
     
     /**
      * 
+     * merge the variables to extract inside the limited include scope.
+     * 
+     * @param array $vars The variables to extract inside the limited include
+     * scope.
+     * 
+     * @return null
+     * 
+     * @see extract()
+     * 
+     */
+    public function addVars(array $vars)
+    {
+        $this->vars = array_merge($this->vars, $vars);
+    }
+    
+    /**
+     * 
      * Sets the variables to extract inside the limited include scope.
      * 
      * @param array $vars The variables to extract inside the limited include
@@ -347,6 +364,27 @@ class Includer
     public function getVars()
     {
         return $this->vars;
+    }
+    
+    /**
+     * 
+     * Resets the old valkue or set the variable to extract inside the 
+     * limited include scope.
+     * 
+     * @param string $key The variable to extract inside the limited include
+     * scope.
+     * 
+     * @param mixed $value The value of the variable to extract inside 
+     * the limited include scope.
+     * 
+     * @return null
+     * 
+     * @see extract()
+     * 
+     */
+    public function setVar($key, $value)
+    {
+        $this->vars[$key] = $value;
     }
     
     /**
