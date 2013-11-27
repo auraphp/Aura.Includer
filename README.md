@@ -15,7 +15,7 @@ This library is installable and autoloadable via Composer with the following
 `require` element in your `composer.json` file:
 
     "require": {
-        "aura/includer": "dev-develop-2"
+        "aura/includer": "2.*@dev"
     }
     
 Alternatively, download or clone this repository, then require or include its
