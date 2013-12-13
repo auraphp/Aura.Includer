@@ -474,7 +474,7 @@ class Includer
     {
         $limited_include = $this->limited_include;
         
-        if ($this->cache_file) {
+        if ($this->cache_file && is_readable($this->cache_file)) {
             $this->debug = array("Load: {$this->cache_file}");
             $limited_include($this->cache_file, $this->vars);
             return;
