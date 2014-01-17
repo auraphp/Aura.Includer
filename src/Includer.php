@@ -471,7 +471,9 @@ class Includer
         $glob = glob($dir . $file);
         
         // error or no results?
-        if (!$glob) return;
+        if (! $glob) {
+            return;
+        }
         
         foreach ($glob as $path) {
             
