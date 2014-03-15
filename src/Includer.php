@@ -468,8 +468,14 @@ class Includer
      */
     protected function addGlob($dir, $file)
     {
-        $glob = $dir . $file;
-        foreach (glob($glob) as $path) {
+        $glob = glob($dir . $file);
+        
+        // error or no results?
+        if (! $glob) {
+            return;
+        }
+        
+        foreach ($glob as $path) {
             
             // strict?
             if (! $this->strict) {
