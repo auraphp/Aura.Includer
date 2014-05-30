@@ -6,28 +6,28 @@ use StdClass;
 class IncluderTest extends \PHPUnit_Framework_TestCase
 {
     protected $includer;
-    
+
     protected $track;
-    
+
     protected $fakefs;
-    
+
     protected function setUp()
     {
         $this->fakefs = __DIR__ . DIRECTORY_SEPARATOR
                       . 'fakefs' . DIRECTORY_SEPARATOR;
-        
+
         $this->track = new StdClass;
         $this->track->files = array();
-        
+
         $this->includer = new Includer;
-        
+
         $this->includer->setDirs(array(
             $this->fakefs . 'dir1',
             $this->fakefs . 'dir2',
             $this->fakefs . 'dirX',
             $this->fakefs . 'dir3',
         ));
-        
+
         $this->includer->setFiles(array(
             'file1.php',
             'file2.php',
@@ -35,12 +35,12 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
             '../cache_file.php', // file is not in specified dir
             'file3.php',
         ));
-        
+
         $this->includer->setVars(array(
             'track' => $this->track,
         ));
     }
-    
+
     public function testGetDirs()
     {
         $expect = array(
@@ -65,19 +65,19 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         $actual = $this->includer->getFiles();
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testGetVars()
     {
         $actual = $this->includer->getVars();
         $this->assertSame($this->track, $actual['track']);
     }
-    
+
     public function testSetAndGetCacheFile()
     {
         $this->includer->setCacheFile('cache_file.php');
         $this->assertSame('cache_file.php', $this->includer->getCacheFile());
     }
-    
+
     public function testGetPaths()
     {
         $expect = array(
@@ -93,7 +93,7 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->includer->getPaths(Includer::DIR_ORDER);
         $this->assertSame($expect, $actual);
-        
+
         $expect = array(
             $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
             $this->fakefs . 'dir2' . DIRECTORY_SEPARATOR . 'file1.php',
@@ -107,7 +107,7 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->includer->getPaths(Includer::FILE_ORDER);
         $this->assertSame($expect, $actual);
-        
+
         $expect = array(
             'Order: file_order',
             'Strict: true',
@@ -126,16 +126,16 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->includer->getDebug();
         $this->assertSame($expect, $actual);
-        
+
         $this->setExpectedException('Aura\Includer\Exception\NoSuchOrder');
         $this->includer->getPaths('bad-order');
     }
-    
+
     public function testNonStrict()
     {
         $this->includer->setStrict(false);
         $this->assertFalse($this->includer->isStrict());
-        
+
         $expect = array(
             $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file1.php',
             $this->fakefs . 'dir1' . DIRECTORY_SEPARATOR . 'file2.php',
@@ -152,7 +152,7 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->includer->getPaths(Includer::DIR_ORDER);
         $this->assertSame($expect, $actual);
-        
+
         $expect = array(
             'Order: dir_order',
             'Strict: false',
@@ -172,7 +172,7 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         $actual = $this->includer->getDebug();
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testLoad()
     {
         $this->includer->load();
@@ -189,7 +189,7 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         );
         $actual = $this->track->files;
         $this->assertSame($expect, $actual);
-        
+
         $expect = array(
             'Order: dir_order',
             'Strict: true',
@@ -226,19 +226,19 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         $expect = array('cache file');
         $actual = $this->track->files;
         $this->assertSame($expect, $actual);
-        
+
         $expect = array(
             'Load: ' . $this->fakefs . 'cache_file.php',
         );
         $actual = $this->includer->getDebug();
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testRead()
     {
         $actual = $this->includer->read();
         $actual = str_replace(dirname($this->fakefs), '', $actual);
-        
+
         $expect = <<<EXPECT
 /**
  * /fakefs/dir1/file1.php
@@ -289,7 +289,7 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
 EXPECT;
         $expect = str_replace('/', DIRECTORY_SEPARATOR, $expect);
         $this->assertSame($expect, $actual);
-        
+
         $expect = array(
             'Order: dir_order',
             'Strict: true',
@@ -318,7 +318,7 @@ EXPECT;
         $actual = $this->includer->getDebug();
         $this->assertSame($expect, $actual);
     }
-    
+
     public function testSetVar()
     {
         $expect = 'something';
@@ -326,9 +326,9 @@ EXPECT;
         $vars = $this->includer->getVars();
         $this->assertSame($expect, $vars['track']);
     }
-    
+
     public function testAddVars()
-    {        
+    {
         $this->includer->setVars(array(
             'hello' => 'Hello',
             'world' => 'World!'
