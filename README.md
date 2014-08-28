@@ -15,8 +15,8 @@ Alternatively, [download a release](https://github.com/auraphp/Aura.Includer/rel
 
 ### Quality
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/badges/quality-score.png?s=0c0371f1e93c02c37f3861523c09fa5c68e116bc)](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/)
-[![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/badges/coverage.png?s=1f0eb5140aa78b919e3700a7740d085b815782cb)](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/badges/quality-score.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/)
+[![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/)
 [![Build Status](https://travis-ci.org/auraphp/Aura.Includer.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Includer)
 
 To run the [PHPUnit][] tests at the command line, go to the _tests_ directory and issue `phpunit`.
@@ -182,7 +182,7 @@ for `Includer::DIR_ORDER` would be:
     # third dir
     modules/baz/autoload.php
     modules/baz/config/default.php
-    
+
 Alternatively, you can specify `load(Includer::FILE_ORDER)` to load files in
 "file order". This means that the loader attemps to load the first file from
 each directory, then the second file from each directory, and so on. Given our
