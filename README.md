@@ -19,7 +19,7 @@ Alternatively, [download a release](https://github.com/auraphp/Aura.Includer/rel
 [![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Includer/)
 [![Build Status](https://travis-ci.org/auraphp/Aura.Includer.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Includer)
 
-To run the unit tests at the command line, go to the _tests/unit_ directory and issue `./phpunit.sh`. (This requires [PHPUnit][] to be available as `phpunit`.)
+To run the unit tests at the command line, issue `phpunit -c tests/unit/`. (This requires [PHPUnit][] to be available as `phpunit`.)
 
 [PHPUnit]: http://phpunit.de/manual/
 
