@@ -3,7 +3,7 @@ namespace Aura\Includer;
 
 use StdClass;
 
-class IncluderTest extends \PHPUnit_Framework_TestCase
+class IncluderTest extends \Yoast\PHPUnitPolyfills\TestCases\TestCase
 {
     protected $includer;
 
@@ -11,7 +11,7 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
 
     protected $fakefs;
 
-    protected function setUp()
+    protected function set_up()
     {
         $this->fakefs = __DIR__ . DIRECTORY_SEPARATOR
                       . 'fakefs' . DIRECTORY_SEPARATOR;
@@ -127,7 +127,7 @@ class IncluderTest extends \PHPUnit_Framework_TestCase
         $actual = $this->includer->getDebug();
         $this->assertSame($expect, $actual);
 
-        $this->setExpectedException('Aura\Includer\Exception\NoSuchOrder');
+        $this->expectException('Aura\Includer\Exception\NoSuchOrder');
         $this->includer->getPaths('bad-order');
     }
 
